@@ -10,6 +10,7 @@ def get_first_news():
                       ' Chrome/127.0.0.0 Safari/537.36'
     }
     url = 'https://3dnews.ru/news/#software'
+    # Получаем URL нашего сайта
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
     articles_cards = soup.find_all('div',
