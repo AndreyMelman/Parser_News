@@ -97,28 +97,27 @@ def create_db_connection():
 
 # Функция сохранения данных в базу PostgreSQL
 def save_data_in_db(connection, news_dict):
-    cursor = None
     try:
-        cursor = connection.cursor()
-        connection.autocommit = True
+        with connection.cursor() as cursor:
+            connection.autocommit = True
 
-        for id_news, new_dict in news_dict.items():
-            # Проверяем существует ли новость в базе данных
-            cursor.execute('SELECT news_id FROM news WHERE news_id = %s', (id_news,))
-            result = cursor.fetchone()
+            for id_news, new_dict in news_dict.items():
+                # Проверяем существует ли новость в базе данных
+                cursor.execute('SELECT news_id FROM news WHERE news_id = %s', (id_news,))
+                result = cursor.fetchone()
 
-            if not result:
-                # Добавляем новую новость
-                cursor.execute('''
-                INSERT INTO news(news_id, title, decs, url, date_time, img_url)
-                VALUES (%s, %s, %s, %s, %s, %s)''',
-                               (id_news, new_dict['article_title'], new_dict['article_desc'], new_dict['article_url'],
-                                new_dict['article_date_time'], new_dict['article_img_url']))
+                if not result:
+                    # Добавляем новую новость
+                    cursor.execute('''
+                    INSERT INTO news(news_id, title, decs, url, date_time, img_url)
+                    VALUES (%s, %s, %s, %s, %s, %s)''',
+                                   (id_news, new_dict['article_title'], new_dict['article_desc'],
+                                    new_dict['article_url'],
+                                    new_dict['article_date_time'], new_dict['article_img_url']))
     except Exception as error:
         print('Ошибка при сохранении данных в PostgreSQL', error)
     finally:
         connection.close()
-        cursor.close()
         print('Соединение с PostgreSQL закрыто')
 
 
