@@ -1,6 +1,8 @@
 import json
 import requests
 from bs4 import BeautifulSoup
+import psycopg2
+from config import host, user, password, db_name
 
 
 # Функция получения новостей в JSON-файл
@@ -70,6 +72,30 @@ def check_news_update():
             article_title = article.find('a', class_='entry-header').text.strip()
             article_desc = article.find('p').text.strip()
             article_date_time = article.find('span', class_='entry-date').text.strip()
+
+        # Занесение новых новостей в базу данных
+        connection = None
+        try:
+            connection = psycopg2.connect(
+                user=user,
+                host=host,
+                password=password,
+                database=db_name
+            )
+            connection.autocommit = True
+            # Добавим данные в таблицу News
+
+            with connection.cursor() as cursor:
+                sql_query = 'INSERT INTO news(news_id, title, decs, url) VALUES (%s, %s, %s, %s);'
+                values = (article_id, article_title, article_desc, article_url)
+                cursor.execute(sql_query, values)
+
+        except Exception as error:
+            print("Ошибка при работе с PostgreSQL", error)
+        finally:
+            if connection:
+                connection.close()
+                print("Соединение с PostgreSQL закрыто")
 
         news_dict[article_id] = {
             'article_date_time': article_date_time,
