@@ -28,14 +28,15 @@ def load_articles_from_site():
         article_desc = article.find('p').text.strip()
         article_url = f'https://3dnews.ru/{article.find('a', class_='entry-header').get('href')}'
         article_date_time = article.find('span', class_='entry-date').text.strip()
-
         article_id = article_url.split('/')[-2]
+        article_img_url = f'https://3dnews.ru/{article.find('img', class_='imageInAllFeed').get('src')}'
 
         news_dict[article_id] = {
             'article_date_time': article_date_time,
             'article_title': article_title,
             'article_desc': article_desc,
             'article_url': article_url,
+            'article_img_url': article_img_url
         }
 
     return news_dict
@@ -51,8 +52,7 @@ def create_json_file(news_dict):
 def update_json(news_dict):
     with open('news_dict.json', 'r', encoding='UTF-8') as file:
         news_dict_old = json.load(file)
-    # Создаем новый словарь, куда будут попадать новые новости
-    fresh_news = {}
+
     # Обновление существующих данных новыми данными
     for id_news, decs_news in news_dict.items():
         if id_news in news_dict_old:
@@ -63,25 +63,21 @@ def update_json(news_dict):
             article_desc = decs_news['article_desc']
             article_url = decs_news['article_url']
             article_date_time = decs_news['article_date_time']
+            article_img_url = decs_news['article_img_url']
 
-        news_dict[article_id] = {
-            'article_date_time': article_date_time,
-            'article_title': article_title,
-            'article_desc': article_desc,
-            'article_url': article_url,
-        }
+            news_dict[article_id] = {
+                'article_date_time': article_date_time,
+                'article_title': article_title,
+                'article_desc': article_desc,
+                'article_url': article_url,
+                'article_img_url': article_img_url,
+            }
 
-        fresh_news[article_id] = {
-            'article_date_time': article_date_time,
-            'article_title': article_title,
-            'article_desc': article_desc,
-            'article_url': article_url,
-        }
     # Сохранение обновленных данных обратно в файл
     with open('news_dict.json', 'w', encoding='UTF-8') as file:
         json.dump(news_dict, file, indent=4, ensure_ascii=False)
 
-    return fresh_news
+    return news_dict
 
 
 # Функция создания подключения к базе данных
@@ -114,10 +110,10 @@ def save_data_in_db(connection, news_dict):
             if not result:
                 # Добавляем новую новость
                 cursor.execute('''
-                INSERT INTO news(news_id, title, decs, url, date_time)
-                VALUES (%s, %s, %s, %s, %s)''',
+                INSERT INTO news(news_id, title, decs, url, date_time, img_url)
+                VALUES (%s, %s, %s, %s, %s, %s)''',
                                (id_news, new_dict['article_title'], new_dict['article_desc'], new_dict['article_url'],
-                                new_dict['article_date_time']))
+                                new_dict['article_date_time'], new_dict['article_img_url']))
     except Exception as error:
         print('Ошибка при сохранении данных в PostgreSQL', error)
     finally:
