@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import psycopg2
 from config import host, user, password, db_name
+import os
 
 
 # Функция парсинга новостного сайта
@@ -39,6 +40,49 @@ def load_articles_from_site():
         }
 
     return news_dict
+
+
+# Функция создания JSON-файла с новостями
+def create_json_file(news_dict):
+    with open('news_dict.json', 'w', encoding='UTF-8') as file:
+        json.dump(news_dict, file, indent=4, ensure_ascii=False)
+
+
+# Функция добавления новой новости в JSON-файл
+def update_json(news_dict):
+    with open('news_dict.json', 'r', encoding='UTF-8') as file:
+        news_dict_old = json.load(file)
+    # Создаем новый словарь, куда будут попадать новые новости
+    fresh_news = {}
+    # Обновление существующих данных новыми данными
+    for id_news, decs_news in news_dict.items():
+        if id_news in news_dict_old:
+            continue
+        else:
+            article_id = id_news
+            article_title = decs_news['article_title']
+            article_desc = decs_news['article_desc']
+            article_url = decs_news['article_url']
+            article_date_time = decs_news['article_date_time']
+
+        news_dict[article_id] = {
+            'article_date_time': article_date_time,
+            'article_title': article_title,
+            'article_desc': article_desc,
+            'article_url': article_url,
+        }
+
+        fresh_news[article_id] = {
+            'article_date_time': article_date_time,
+            'article_title': article_title,
+            'article_desc': article_desc,
+            'article_url': article_url,
+        }
+    # Сохранение обновленных данных обратно в файл
+    with open('news_dict.json', 'w', encoding='UTF-8') as file:
+        json.dump(news_dict, file, indent=4, ensure_ascii=False)
+
+    return fresh_news
 
 
 # Функция создания подключения к базе данных
@@ -89,6 +133,11 @@ def main():
 
     if connection:
         save_data_in_db(connection, news_dict)
+
+    if os.path.exists('news_dict.json'):
+        update_json(news_dict)
+    else:
+        create_json_file(news_dict)
 
 
 if __name__ == '__main__':
