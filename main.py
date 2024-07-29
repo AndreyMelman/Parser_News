@@ -6,7 +6,7 @@ from config import host, user, password, db_name
 
 
 # Функция получения новостей в JSON-файл
-def get_first_news():
+def load_articles_from_site():
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
                       ' Chrome/127.0.0.0 Safari/537.36'
@@ -38,8 +38,28 @@ def get_first_news():
             'article_url': article_url,
         }
 
-    with open('news_dict.json', 'w', encoding='UTF-8') as file:
-        json.dump(news_dict, file, indent=4, ensure_ascii=False)
+    return news_dict
+
+
+# База данных
+def create_db_connection():
+    connection = None
+    try:
+        connection = psycopg2.connect(
+            user=user,
+            host=host,
+            password=password,
+            database=db_name
+        )
+        connection.autocommit = True
+    except Exception as error:
+        print("Ошибка при работе с PostgreSQL", error)
+    finally:
+        if connection:
+            connection.close()
+            print("Соединение с PostgreSQL закрыто")
+
+    return connection
 
 
 # Получение новых новостей с сохранением в JSON-файл
@@ -117,8 +137,12 @@ def check_news_update():
 
 
 def main():
-    # get_first_news()
-    print(check_news_update())
+    articles = load_articles_from_site()
+    connection = create_db_connection()
+    # check_news_update()
+
+    for id, article in articles.items():
+        print(id, article)
 
 
 if __name__ == '__main__':
