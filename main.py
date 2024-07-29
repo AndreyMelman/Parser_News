@@ -86,8 +86,8 @@ def check_news_update():
             # Добавим данные в таблицу News
 
             with connection.cursor() as cursor:
-                sql_query = 'INSERT INTO news(news_id, title, decs, url) VALUES (%s, %s, %s, %s);'
-                values = (article_id, article_title, article_desc, article_url)
+                sql_query = 'INSERT INTO news(news_id, title, decs, url, date_time) VALUES (%s, %s, %s, %s, %s);'
+                values = (article_id, article_title, article_desc, article_url, article_date_time)
                 cursor.execute(sql_query, values)
 
         except Exception as error:
