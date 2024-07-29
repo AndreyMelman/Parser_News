@@ -63,7 +63,7 @@ def create_db_connection():
 
 
 # Получение новых новостей с сохранением в JSON-файл
-def check_news_update():
+'''def check_news_update():
     with open('news_dict.json', 'r', encoding='UTF-8') as file:
         news_dict = json.load(file)
 
@@ -133,7 +133,7 @@ def check_news_update():
     with open('news_dict.json', 'w', encoding='UTF-8') as file:
         json.dump(news_dict, file, indent=4, ensure_ascii=False)
 
-    return fresh_news
+    return fresh_news'''
 
 
 def main():
