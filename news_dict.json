@@ -1,4 +1,34 @@
 {
+    "1108641": {
+        "article_date_time": "29.07.2024 10:36",
+        "article_title": "BioWare объяснила, почему Dragon Age: The Veilguard пришлось ждать так долго",
+        "article_desc": "Ближайшей осенью Dragon Age: Inquisition исполнится уже десять лет, а Dragon Age: The Veilguard — следующая номерная игра ролевой франшизы — лишь готовится к релизу. Затянувшееся ожидание прокомментировали в BioWare.",
+        "article_url": "https://3dnews.ru//1108641/bioware-obyasnila-pochemu-dragon-age-veilguard-prishlos-zhdat-tak-dolgo"
+    },
+    "1108635": {
+        "article_date_time": "29.07.2024 08:37",
+        "article_title": "В США создали систему оценки рисков для ИИ-алгоритмов",
+        "article_desc": "Национальный институт стандартов и технологий (NIST), входящий в состав Министерства торговли США и занимающийся разработкой и тестированием технологий для американского правительства, компаний и общественности, представил обновлённый тестовый стенд Dioptra. Он предназначен для оценки того, как вредоносные атаки, включая те, что направлены на «отравление» используемых для обучения больших языковых моделей данных влияют на снижение производительности ИИ-систем.",
+        "article_url": "https://3dnews.ru//1108635/v-ssha-sozdali-sistemu-otsenki-riskov-dlya-iialgoritmov"
+    },
+    "1108633": {
+        "article_date_time": "29.07.2024 06:21",
+        "article_title": "Пользователи iPhone в ЕС смогут теперь скачивать торрент-приложения",
+        "article_desc": "Европейские пользователи iPhone теперь могут скачивать приложения для работы с торрентами из альтернативного магазина AltStore PAL, чей каталог пополнился несколькими эксклюзивными приложениями, недоступными в официальном App Store — AppleiTorrent и qBitControl, а также приложение для знакомств PeopleDrop, сообщает The Verge.",
+        "article_url": "https://3dnews.ru//1108633/polzovateli-iphone-v-es-smogut-teper-skachivat-torrentprilogeniya"
+    },
+    "1108631": {
+        "article_date_time": "29.07.2024 00:44",
+        "article_title": "Выпуск Apple Intelligence для iOS, iPadOS и macOS Sequoia отложен до октября",
+        "article_desc": "Компания Apple перенесла запланированную дату выпуска функции искусственного интеллекта Apple Intelligence, решив уделить больше времени исправлению ошибок и улучшению стабильности алгоритма. По сообщению Марка Гурмана (Mark Gurman) из Bloomberg, функция будет запущена после официального выхода iOS 18, iPadOS 18 и macOS Sequoia.",
+        "article_url": "https://3dnews.ru//1108631/vipusk-apple-intelligence-otlogen-do-oktyabrya-i-viydet-uge-v-versii-ios-181"
+    },
+    "1108630": {
+        "article_date_time": "29.07.2024 00:20",
+        "article_title": "AMD представила Amuse 2.0 — ПО для ИИ-генерации изображений для Ryzen и Radeon",
+        "article_desc": "AMD представила Amuse 2.0 — программный инструмент для ИИ-генерации изображений. Программа доступна в бета-версии. В перспективе её функциональность будет расширяться. Amuse 2.0 является своего рода аналогом инструмента AI Playground от Intel, использующего мощности видеокарт Intel Arc. Решение от AMD для генерации контента в свою очередь полагается на мощности процессоров Ryzen и видеокарт Radeon.",
+        "article_url": "https://3dnews.ru//1108630/amd-predstavila-prilogenie-amuse-20-dlya-iigeneratsii-izobrageniy-dlya-ryzen-i-radeon-s-poddergkoy-xdna-super-resolution"
+    },
     "1108624": {
         "article_date_time": "28.07.2024 19:39",
         "article_title": "Исследователи научили ИИ издали красть информацию с монитора по излучению от HDMI-кабеля",
@@ -89,46 +119,16 @@
         "article_desc": "Издательство 663 Games и разработчики из китайской студии Shadowlight Sanctuary анонсировали совместный проект — ролевой детектив Kill the Shadow, сочетающий двухмерных персонажей и трёхмерное окружение.",
         "article_url": "https://3dnews.ru//1108576/anonsirovan-kitayskiy-rolevoy-detektiv-kill-the-shadow-napominayuschiy-smes-disco-elysium-i-the-last-night"
     },
-    "1108575": {
-        "article_date_time": "26.07.2024 22:39",
-        "article_title": "Каждую «кнопку YouTube» из российского офиса Google оценили в 1 рубль",
-        "article_desc": "Конкурсный управляющий ООО «Гугл» (признанное банкротом российское подразделение Google) Валерий Таляровский разместил на «Федресурсе» оценку имущества компании. В числе прочего в списке есть шесть «кнопок YouTube» — сувенирных табличек, которые выдаются блогерам при достижении определённого числа подписчиков. Каждую из кнопок охарактеризовали как имеющую «мелкие потёртости и царапины» и оценили в 1 рубль.",
-        "article_url": "https://3dnews.ru//1108575/kagdaya-knopka-youtube-iz-rossiyskogo-ofisa-google-otsenena-v-1-rubl"
+    "1108648": {
+        "article_date_time": "29.07.2024 12:56",
+        "article_title": "«Фанаты будут очень и очень рады»: глава Gearbox намекнул на близость Borderlands 4 и подтвердил ещё один фильм",
+        "article_desc": "Издатель Take-Two Interactive, с недавних пор владеющий Gearbox, подтвердил разработку новой Borderlands ещё в марте, а полноценного анонса всё нет. Однако, судя по всему, ждать осталось недолго.",
+        "article_url": "https://3dnews.ru//1108648/fanaty-budut-ochen-i-ochen-rady-glava-gearbox-nameknul-na-blizost-borderlands-4-i-podtverdil-eschyo-odin-film"
     },
-    "1108574": {
-        "article_date_time": "26.07.2024 21:46",
-        "article_title": "Соцсеть X начала без уведомления использовать данные пользователей для обучения Grok",
-        "article_desc": "Социальная платформа X (ранее Twitter) начала без уведомления пользователей использовать их публикации и диалоги с ИИ-чат-ботом Grok, для обучения последнего, пишет ресурс 9to5Mac. В настройках разрешение на использование данных для обучения включено по умолчанию, однако пользователи могут запретить эти действия, но только в веб-версии X.",
-        "article_url": "https://3dnews.ru//1108574/sotsset-x-nachala-bez-uvedomleniya-ispolzovat-dannie-polzovateley-dlya-obucheniya-grok"
-    },
-    "1108573": {
-        "article_date_time": "26.07.2024 21:05",
-        "article_title": "Mirthwood получила новый трейлер и дату выхода — это ролевой симулятор жизни в фэнтезийном мире, вдохновлённый Fable, Stardew Valley и The Sims",
-        "article_desc": "Издательство V Publishing и разработчики из американской Bad Ridge Games, состоящей всего из двух человек, объявили точную дату выхода Mirthwood — ролевого симулятора жизни в мире средневекового фэнтези.",
-        "article_url": "https://3dnews.ru//1108573/mirthwood-poluchila-noviy-treyler-i-datu-vykhoda-eto-rolevoy-simulyator-zhizni-v-fenteziynom-mire-vdokhnovlyonniy-fable-stardew-valley-i-the-sims"
-    },
-    "1108572": {
-        "article_date_time": "26.07.2024 19:45",
-        "article_title": "Журналисты выяснили, какие игры пострадают от забастовки актёров озвучки — GTA VI в безопасности",
-        "article_desc": "Начавшаяся сегодня, 26 июля, забастовка профсоюза SAG-AFTRA против игровых компаний затрагивает в том числе Take-Two Interactive, однако GTA VI наряду с целым рядом других проектов жертвой протестующих не станет.",
-        "article_url": "https://3dnews.ru//1108572/zhurnalisty-vyyasnili-kakiye-igry-postradayut-ot-zabastovki-aktyorov-ozvuchki-gta-vi-v-bezopasnosti"
-    },
-    "1108567": {
-        "article_date_time": "26.07.2024 18:38",
-        "article_title": "Разработчики Gran Turismo 7 извинились за баг, который запускает машины в космос",
-        "article_desc": "Вышедшее накануне, 25 июля, обновление 1.49 для гоночного симулятора Gran Turismo 7 от Polyphony Digital принесло с собой дополнительную трассу, шесть автомобилей, апгрейд физической модели и нечто неожиданное.",
-        "article_url": "https://3dnews.ru//1108567/razrabotchiki-gran-turismo-7-izvinilis-za-bag-kotoriy-zapuskayet-mashiny-v-kosmos"
-    },
-    "1108564": {
-        "article_date_time": "26.07.2024 17:56",
-        "article_title": "Хинштейн пояснил, почему в России замедлится YouTube",
-        "article_desc": "Депутат Госдумы Александр Хинштейн разъяснил своё вчерашнее заявление по поводу замедления работы YouTube в России. Власти страны не намерены предпринимать каких-то активных ограничительных мер в отношении платформы — это российские дата-центры прекратят взаимодействие с Google по серым схемам.",
-        "article_url": "https://3dnews.ru//1108564/hinshteyn-poyasnil-pochemu-v-rossii-zamedlitsya-rabota-youtube"
-    },
-    "1108563": {
-        "article_date_time": "26.07.2024 17:49",
-        "article_title": "Windows 11 сможет добавлять синхронизированный с ПК Android-смартфон в «Проводник»",
-        "article_desc": "Компания Microsoft начала тестировать новый способ получить доступ к Android-смартфону, который синхронизирован с операционной системой Windows 11. Теперь сделать это можно прямо из «Проводника». На данном этапе упомянутое нововведение доступно участникам программы предварительной оценки Windows Insider.",
-        "article_url": "https://3dnews.ru//1108563/windows-11-pozvolit-dobavlyat-sinhronizirovanniy-s-pk-androidsmartfon-v-provodnik"
+    "1108645": {
+        "article_date_time": "29.07.2024 11:59",
+        "article_title": "Энтузиаст запустил классическую Doom внутри Balatro — разработчик покерного роглайка оценил",
+        "article_desc": "Покерный роглайк Balatro от разработчика LocalThunk в начале 2024 года покорил геймеров необычным прочтением классического карточного развлечения, но можно ли использовать его для игры в Doom? Можно. Правда, с оговорками.",
+        "article_url": "https://3dnews.ru//1108645/entuziast-zapustil-klassicheskuyu-doom-vnutri-balatro-razrabotchik-pokernogo-roglayka-otsenil"
     }
 }
