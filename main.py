@@ -18,16 +18,15 @@ def load_articles_from_site():
     # Получаем HTML-файл
     soup = BeautifulSoup(response.text, 'lxml')
     # Получаем кусок HTML-файла с которого будем парсить новости
-    articles_cards = soup.find_all('div',
-                                   class_='article-entry article-infeed marker_sw '
-                                          'nImp0 nIcat10 cat_10 nIaft newsAllFeedHideItem')
+    articles_cards = soup.find_all('div', class_='marker_sw')
+
     # Создаем словарь для записи новостей
     news_dict = {}
 
     for article in articles_cards:
-        article_title = article.find('a', class_='entry-header').text.strip()
+        article_title = article.find('h1').text.strip()
         article_desc = article.find('p').text.strip()
-        article_url = f'https://3dnews.ru/{article.find('a').get('href')}'
+        article_url = f'https://3dnews.ru/{article.find('a', class_='entry-header').get('href')}'
         article_date_time = article.find('span', class_='entry-date').text.strip()
 
         article_id = article_url.split('/')[-2]
@@ -134,6 +133,7 @@ def main():
     if connection:
         save_data_in_db(connection, news_dict)
 
+    # Проверка существует ли JSON-файл
     if os.path.exists('news_dict.json'):
         update_json(news_dict)
     else:
