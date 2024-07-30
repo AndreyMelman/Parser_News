@@ -101,19 +101,22 @@ def save_data_in_db(connection, news_dict):
         with connection.cursor() as cursor:
             connection.autocommit = True
 
+            select_st = 'SELECT news_id FROM d3news WHERE news_id = %s'
+            insert_st = '''INSERT INTO d3news(news_id, title, decs, url, date_time, img_url)
+                    VALUES (%s, %s, %s, %s, %s, %s)'''
+
             for id_news, new_dict in news_dict.items():
                 # Проверяем существует ли новость в базе данных
-                cursor.execute('SELECT news_id FROM news WHERE news_id = %s', (id_news,))
+                cursor.execute(select_st, (id_news,))
                 result = cursor.fetchone()
 
                 if not result:
                     # Добавляем новую новость
-                    cursor.execute('''
-                    INSERT INTO news(news_id, title, decs, url, date_time, img_url)
-                    VALUES (%s, %s, %s, %s, %s, %s)''',
-                                   (id_news, new_dict['article_title'], new_dict['article_desc'],
-                                    new_dict['article_url'],
-                                    new_dict['article_date_time'], new_dict['article_img_url']))
+                    values = [(id_news, new_dict['article_title'], new_dict['article_desc'],
+                               new_dict['article_url'],
+                               new_dict['article_date_time'], new_dict['article_img_url'])]
+
+                    cursor.executemany(insert_st, values)
     except Exception as error:
         print('Ошибка при сохранении данных в PostgreSQL', error)
     finally:
