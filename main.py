@@ -1,9 +1,12 @@
 import json
+import time
+
 import requests
 from bs4 import BeautifulSoup
 import psycopg2
 from config import host, user, password, db_name
 import os
+import schedule
 
 
 # Функция парсинга новостного сайта
@@ -120,7 +123,7 @@ def save_data_in_db(connection, news_dict):
         print('Соединение с PostgreSQL закрыто')
 
 
-def main():
+def job():
     news_dict = load_articles_from_site()
     connection = create_db_connection()
 
@@ -132,6 +135,14 @@ def main():
         update_json(news_dict)
     else:
         create_json_file(news_dict)
+
+
+def main():
+    schedule.every(1).minutes.do(job)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 if __name__ == '__main__':
