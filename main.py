@@ -1,6 +1,6 @@
 import json
 import time
-
+from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 import psycopg2
@@ -15,31 +15,36 @@ def load_articles_from_site():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
                       ' Chrome/127.0.0.0 Safari/537.36'
     }
-    url = 'https://3dnews.ru/news/#software'
+    url = 'https://3dnews.ru/software-news/rss'
     # Получаем URL нашего сайта
     response = requests.get(url, headers=headers)
     # Получаем HTML-файл
-    soup = BeautifulSoup(response.text, 'lxml')
+    soup = BeautifulSoup(response.content, 'xml')
     # Получаем кусок HTML-файла с которого будем парсить новости
-    articles_cards = soup.find_all('div', class_='marker_sw')
+    articles_items = soup.find_all('item')
 
     # Создаем словарь для записи новостей
     news_dict = {}
 
-    for article in articles_cards:
-        article_title = article.find('h1').text.strip()
-        article_desc = article.find('p').text.strip()
-        article_url = f'https://3dnews.ru/{article.find('a', class_='entry-header').get('href')}'
-        article_date_time = article.find('span', class_='entry-date').text.strip()
-        article_id = article_url.split('/')[-2]
-        article_img_url = f'https://3dnews.ru/{article.find('img', class_='imageInAllFeed').get('src')}'
+    for article in articles_items:
+        article_title = article.find('title').text
+        article_url = article.find('link').text
+        article_id = article.find('link').text.split('/')[3]
+        article_desc = article.find('description').text
+        article_img_url = article.find('enclosure').get('url')
+        article_category = article.find('category').text
+
+        date_obj = article.find('pubDate').text[5:-6]
+        formatted_date_str = datetime.strptime(date_obj, '%d %b %Y %H:%M:%S')
+        article_date_time = formatted_date_str.strftime('%Y-%m-%d %H:%M:%S')
 
         news_dict[article_id] = {
-            'article_date_time': article_date_time,
             'article_title': article_title,
+            'article_date_time': article_date_time,
             'article_desc': article_desc,
             'article_url': article_url,
-            'article_img_url': article_img_url
+            'article_img_url': article_img_url,
+            'article_category': article_category,
         }
 
     return news_dict
@@ -63,17 +68,19 @@ def update_json(news_dict):
         else:
             article_id = id_news
             article_title = decs_news['article_title']
+            article_date_time = decs_news['article_date_time']
             article_desc = decs_news['article_desc']
             article_url = decs_news['article_url']
-            article_date_time = decs_news['article_date_time']
+            article_category = decs_news['article_category']
             article_img_url = decs_news['article_img_url']
 
             news_dict[article_id] = {
-                'article_date_time': article_date_time,
                 'article_title': article_title,
+                'article_date_time': article_date_time,
                 'article_desc': article_desc,
                 'article_url': article_url,
                 'article_img_url': article_img_url,
+                'article_category': article_category,
             }
 
     # Сохранение обновленных данных обратно в файл
@@ -104,15 +111,15 @@ def save_data_in_db(connection, news_dict):
         with connection.cursor() as cursor:
             connection.autocommit = True
 
-            insert_st = '''INSERT INTO d3news(news_id, title, decs, url, date_time, img_url)
-                    VALUES (%s, %s, %s, %s, %s, %s) ON CONFLICT (news_id) DO NOTHING;'''
+            insert_st = '''INSERT INTO news_cs2(id_news, title, date_time, desc_news, url, img_url, category)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT (id_news) DO NOTHING;'''
             values = []
 
             for id_news, new_dict in news_dict.items():
                 if str.isdigit(id_news):
-                    values.append((id_news, new_dict['article_title'], new_dict['article_desc'],
-                                   new_dict['article_url'],
-                                   new_dict['article_date_time'], new_dict['article_img_url']))
+                    values.append(
+                        (id_news, new_dict['article_title'], new_dict['article_date_time'], new_dict['article_desc'],
+                         new_dict['article_url'], new_dict['article_img_url'], new_dict['article_category']))
 
             cursor.executemany(insert_st, values)
 
@@ -138,7 +145,7 @@ def job():
 
 
 def main():
-    schedule.every(1).minutes.do(job)
+    schedule.every(60).minutes.do(job)
 
     while True:
         schedule.run_pending()
