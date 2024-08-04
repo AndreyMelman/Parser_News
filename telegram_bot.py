@@ -29,6 +29,12 @@ async def send_news_to_telegram(message: types.Message):
     connection.close()
 
 
-async def start_bot():
+async def main():
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
+
+if __name__ == '__main__':
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print('Exit')

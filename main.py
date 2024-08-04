@@ -2,11 +2,12 @@ from database import create_db_connection, save_data_in_db, get_news_from_db, cl
 import os
 from parser import load_articles_from_site
 from json_save import create_json_file, update_json
-from telegram_bot import start_bot
-import asyncio
+
+import schedule
+import time
 
 
-async def main():
+def job():
     news_dict = load_articles_from_site()
     connection = create_db_connection()
 
@@ -22,11 +23,14 @@ async def main():
     else:
         create_json_file(news_dict)
 
-    await start_bot()
+
+def main():
+    schedule.every(30).minutes.do(job)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 if __name__ == '__main__':
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        print('Exit')
+    main()
