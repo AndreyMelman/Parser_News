@@ -1,26 +1,26 @@
 import asyncio
-from telegram_bot import start_bot, parse_and_send_news
+from task.bot import bot
+from task.collector import collector
+import logging
+from task.spammer import spammer
 
-
-# Планировщик задач
-async def schedule_task():
-    while True:
-        await parse_and_send_news()
-        await asyncio.sleep(3600)  # Запускать каждые 60 минут
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 
 # Основной цикл работы
 async def main():
     # Запускаем планировщик задач
-    task1 = asyncio.create_task(schedule_task())
+    task1 = asyncio.create_task(collector())
     # Запускаем бота
-    task2 = asyncio.create_task(start_bot())
+    task2 = asyncio.create_task(bot())
+    #
+    task3 = asyncio.create_task(spammer())
 
-    await asyncio.gather(task1, task2)
+    await asyncio.gather(task1, task2, task3)
 
 
 if __name__ == '__main__':
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print('Exit')
+        logging.info(f'Выход из бота')

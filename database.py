@@ -1,3 +1,5 @@
+import logging
+
 from config_reader import config
 import psycopg2
 
@@ -13,7 +15,7 @@ def create_db_connection():
         )
         return connection
     except Exception as error:
-        print("Ошибка при подключении к PostgreSQL", error)
+        logging.error(f'Ошибка при подключении к PostgreSQL: {error}')
         return None
 
 
@@ -21,7 +23,6 @@ def create_db_connection():
 def save_data_in_db(connection, news_dict):
     try:
         with connection.cursor() as cursor:
-            connection.autocommit = True
 
             insert_st = '''INSERT INTO news_cs2(id_news, title, date_time, desc_news, url, img_url, category)
                     VALUES (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT (id_news) DO NOTHING;'''
@@ -35,12 +36,14 @@ def save_data_in_db(connection, news_dict):
 
             cursor.executemany(insert_st, values)
 
+            connection.commit()
+
     except Exception as error:
-        print('Ошибка при сохранении данных в PostgreSQL', error)
+        logging.error(f'Ошибка при сохранении данных в PostgreSQL: {error}')
 
 
 # Функция получения новых новостей из базы PostgreSQL
-def get_news_from_db(connection):
+def get_unread_news(connection):
     try:
         with connection.cursor() as cursor:
             cursor.execute('''SELECT id_news, title, date_time, desc_news, url, img_url, category
@@ -52,7 +55,7 @@ def get_news_from_db(connection):
             return news
 
     except Exception as error:
-        print('Ошибка при получении данных из PostgreSQL', error)
+        logging.error(f'Ошибка при получении данных из PostgreSQL: {error}')
         return []
 
 
@@ -61,13 +64,13 @@ def mark_news_as_sent(connection, list_id):
     list_id = tuple(list_id)
     try:
         with connection.cursor() as cursor:
-            cursor.execute('UPDATE news_cs2 SET sent_to_telegram = TRUE WHERE id_news in %s;', (list_id,))
+            cursor.execute('UPDATE news_cs2 SET sent_to_telegram = TRUE WHERE id_news IN %s;', (list_id,))
             connection.commit()
     except Exception as error:
-        print(f"Ошибка при обновлении статуса новости: {error}")
+        logging.error(f'Ошибка при обновлении статуса новости: {error}')
 
 
 def close(connection):
     if connection:
         connection.close()
-        print('Соединение с PostgreSQL закрыто')
+        logging.info(f'Соединение с PostgreSQL закрыто')
