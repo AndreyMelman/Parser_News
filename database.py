@@ -1,4 +1,4 @@
-from config_reader import user, host, password, db_name
+from config_reader import config
 import psycopg2
 
 
@@ -6,10 +6,10 @@ import psycopg2
 def create_db_connection():
     try:
         connection = psycopg2.connect(
-            user=user,
-            host=host,
-            password=password,
-            database=db_name
+            user=config.db_user.get_secret_value(),
+            host=config.db_host.get_secret_value(),
+            password=config.db_password.get_secret_value(),
+            database=config.db_name.get_secret_value()
         )
         return connection
     except Exception as error:
