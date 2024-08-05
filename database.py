@@ -57,10 +57,11 @@ def get_news_from_db(connection):
 
 
 # Функция обновления столбца sent_to_telegram, для отправления в телеграм новых новостей
-def mark_news_as_sent(connection, news_id):
+def mark_news_as_sent(connection, list_id):
+    list_id = tuple(list_id)
     try:
         with connection.cursor() as cursor:
-            cursor.execute('UPDATE news_cs2 SET sent_to_telegram = TRUE WHERE id_news = %s;', (news_id,))
+            cursor.execute('UPDATE news_cs2 SET sent_to_telegram = TRUE WHERE id_news in %s;', (list_id,))
             connection.commit()
     except Exception as error:
         print(f"Ошибка при обновлении статуса новости: {error}")

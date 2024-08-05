@@ -16,11 +16,13 @@ telegram_group_id = config.telegram_group_id.get_secret_value()
 
 # Функция для отправки новостей в Телеграм
 async def send_news_to_telegram(new_news, connection):
+    list_id = []
     for id_news, title, date_time, desc, url, url_img, category in sorted(new_news):
         message = f'{date_time} {category}\n{url}'
         await bot.send_message(telegram_group_id, text=message)
+        list_id.append(id_news)
 
-        mark_news_as_sent(connection, id_news)
+    mark_news_as_sent(connection, list_id)
 
 
 # Функция, которая выполняет парсинг, сохранение и отправку новостей
@@ -51,6 +53,12 @@ async def parse_and_send_news():
 @dp.message(Command('news'))
 async def manual_send_news(message: types.Message):
     await parse_and_send_news()
+
+
+# Обработчик команды, если нет такой писать предупреждать
+@dp.message()
+async def echo(message: types.Message):
+    await message.answer(f'Такой команды нет')
 
 
 # Основная функция запуска бота
