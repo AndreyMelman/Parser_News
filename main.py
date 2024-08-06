@@ -13,7 +13,7 @@ async def main():
     task1 = asyncio.create_task(collector())
     # Запускаем бота
     task2 = asyncio.create_task(bot())
-    #
+    # Отправка новых новостей в телеграм бота
     task3 = asyncio.create_task(spammer())
 
     await asyncio.gather(task1, task2, task3)

@@ -1,6 +1,8 @@
 import logging
 import asyncio
-from parser.ddd_news import load_articles_from_site
+from parser.ddd_news import load_articles_from_3dnews
+from parser.habr_news import load_articles_from_habr
+from parser.onliner_news import load_articles_from_onliner
 from database import create_db_connection, save_data_in_db, close
 
 
@@ -15,13 +17,17 @@ async def collector():
 async def parse_news():
     try:
         # Парсим сайт
-        news_3dnews = load_articles_from_site()
+        news_3dnews = load_articles_from_3dnews()
+        news_habr = load_articles_from_habr()
+        news_onliner = load_articles_from_onliner()
         # Подключаемся к базе данных
         connection = create_db_connection()
 
         if connection:
             # Сохраняем в базу новые новости
             save_data_in_db(connection, news_3dnews)
+            save_data_in_db(connection, news_habr)
+            save_data_in_db(connection, news_onliner)
         # Закрываем соединение с базой
 
         close(connection)
