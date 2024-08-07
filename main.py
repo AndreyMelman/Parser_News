@@ -1,5 +1,5 @@
 import asyncio
-from task.bot import bot
+from task.used_bot import tg_bot
 from task.collector import collector
 import logging
 from task.spammer import spammer
@@ -12,7 +12,7 @@ async def main():
     # Запускаем планировщик задач
     task1 = asyncio.create_task(collector())
     # Запускаем бота
-    task2 = asyncio.create_task(bot())
+    task2 = asyncio.create_task(tg_bot())
     # Отправка новых новостей в телеграм бота
     task3 = asyncio.create_task(spammer())
 

@@ -10,7 +10,7 @@ from database import create_db_connection, save_data_in_db, close
 async def collector():
     while True:
         await parse_news()
-        await asyncio.sleep(3600)  # Запускать каждые 60 минут
+        await asyncio.sleep(60*30)  # Запускать каждые 60 минут
 
 
 # Функция, которая выполняет парсинг сайта и сохранение новостей в базе данных
