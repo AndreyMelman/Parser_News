@@ -21,12 +21,12 @@ def load_articles_from_onliner():
     news_dict = {}
 
     for article in articles_items:
-        article_title = article.find('a', class_='news-tidings__link').find_next('span').text
+        article_title = article.find('span', class_='news-helpers_hide_mobile-small').text
         article_url = f'https://tech.onliner.by' + article.find('a', class_='news-tidings__stub').get('href')
         article_id = article.get('data-post-date')
-        article_desc = article.find('div', class_='news-helpers_hide_mobile-small').text.strip()
+        article_desc = article.find('div', class_='news-tidings__speech').text.strip()
         article_img_url = article.find('img').get('src')
-        article_category = 'tech.onliner'
+        article_category = 'Onliner news'
         article_date_time_unix = article.get('data-post-date')
         article_date_time = datetime.fromtimestamp(int(article_date_time_unix))
 
