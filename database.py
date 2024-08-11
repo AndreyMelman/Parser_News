@@ -1,76 +1,100 @@
 import logging
 
-from config_reader import config
 import psycopg2
+from config_reader import config
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 
-# Функция создания подключения к базе данных
-def create_db_connection():
-    try:
-        connection = psycopg2.connect(
-            user=config.db_user.get_secret_value(),
-            host=config.db_host.get_secret_value(),
-            password=config.db_password.get_secret_value(),
-            database=config.db_name.get_secret_value()
-        )
-        return connection
-    except Exception as error:
-        logging.error(f'Ошибка при подключении к PostgreSQL: {error}')
-        return None
+# Класс для управления подключением к базе данных
+class DatabaseConnection:
+
+    def __init__(self):
+        self.connection = None
+        self.create_db_connection()
+
+    # Функция создания подключения к базе данных
+    def create_db_connection(self):
+        try:
+            self.connection = psycopg2.connect(
+                user=config.db_user.get_secret_value(),
+                host=config.db_host.get_secret_value(),
+                password=config.db_password.get_secret_value(),
+                database=config.db_name.get_secret_value()
+            )
+            logging.info(f'Успешное подключение к базе данных')
+            return self.connection
+        except Exception as error:
+            logging.error(f'Ошибка при подключении к PostgreSQL: {error}')
+            return None
+
+    def close_db(self):
+        if self.connection:
+            self.connection.close()
+            logging.info(f'Соединение с PostgreSQL закрыто')
 
 
-# Функция сохранения данных в базу PostgreSQL
-def save_data_in_db(connection, news_dict):
-    try:
-        with connection.cursor() as cursor:
+# Класс для выполнения операций с базой данных
+class NewsRepository:
 
-            insert_st = '''INSERT INTO news_cs2(id_news, title, date_time, desc_news, url, img_url, category)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT (id_news) DO NOTHING;'''
-            values = []
+    def __init__(self, db_connection):
+        self.db_connection = db_connection
 
-            for id_news, new_dict in news_dict.items():
-                if str.isdigit(id_news):
-                    values.append(
-                        (id_news, new_dict['article_title'], new_dict['article_date_time'], new_dict['article_desc'],
-                         new_dict['article_url'], new_dict['article_img_url'], new_dict['article_category']))
+    # Функция сохранения данных в базу PostgreSQL
+    def save_data_in_db(self, news_dict):
+        connection = self.db_connection.connection
+        if not connection:
+            logging.error(f'Нет активного подключения к базе данных')
+        try:
+            with connection.cursor() as cursor:
 
-            cursor.executemany(insert_st, values)
+                insert_st = '''INSERT INTO news_cs2(id_news, title, date_time, desc_news, url, img_url, category)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT (id_news) DO NOTHING;'''
+                values = []
 
-            connection.commit()
+                for id_news, new_dict in news_dict.items():
+                    if str.isdigit(id_news):
+                        values.append(
+                            (
+                                id_news, new_dict['article_title'], new_dict['article_date_time'],
+                                new_dict['article_desc'],
+                                new_dict['article_url'], new_dict['article_img_url'], new_dict['article_category']))
 
-    except Exception as error:
-        logging.error(f'Ошибка при сохранении данных в PostgreSQL: {error}')
+                cursor.executemany(insert_st, values)
 
+                connection.commit()
 
-# Функция получения новых новостей из базы PostgreSQL
-def get_unread_news(connection):
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute('''SELECT id_news, title, date_time, desc_news, url, img_url, category
-                              FROM news_cs2
-                              WHERE sent_to_telegram = FALSE
-                              ORDER BY date_time DESC''')
-            news = cursor.fetchall()
+        except Exception as error:
+            logging.error(f'Ошибка при сохранении данных в PostgreSQL: {error}')
 
-            return news
+    # Функция получения новых новостей из базы PostgreSQL
+    def get_unread_news(self):
+        connection = self.db_connection.connection
+        if not connection:
+            logging.error(f'Нет активного подключения к базе данных')
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute('''SELECT id_news, title, date_time, desc_news, url, img_url, category
+                                      FROM news_cs2
+                                      WHERE sent_to_telegram = FALSE
+                                      ORDER BY date_time DESC''')
+                news = cursor.fetchall()
 
-    except Exception as error:
-        logging.error(f'Ошибка при получении данных из PostgreSQL: {error}')
-        return []
+                return news
 
+        except Exception as error:
+            logging.error(f'Ошибка при получении данных из PostgreSQL: {error}')
+            return []
 
-# Функция обновления столбца sent_to_telegram, для отправления в телеграм новых новостей
-def mark_news_as_sent(connection, list_id):
-    list_id = tuple(list_id)
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute('UPDATE news_cs2 SET sent_to_telegram = TRUE WHERE id_news IN %s;', (list_id,))
-            connection.commit()
-    except Exception as error:
-        logging.error(f'Ошибка при обновлении статуса новости: {error}')
-
-
-def close(connection):
-    if connection:
-        connection.close()
-        logging.info(f'Соединение с PostgreSQL закрыто')
+    # Функция обновления столбца sent_to_telegram, для отправления в телеграм новых новостей
+    def mark_news_as_sent(self, list_id):
+        connection = self.db_connection.connection
+        if not connection:
+            logging.error(f'Нет активного подключения к базе данных')
+        list_id = tuple(list_id)
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute('UPDATE news_cs2 SET sent_to_telegram = TRUE WHERE id_news IN %s;', (list_id,))
+                connection.commit()
+        except Exception as error:
+            logging.error(f'Ошибка при обновлении статуса новости: {error}')

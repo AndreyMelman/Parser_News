@@ -5,7 +5,7 @@ from aiogram.types import LinkPreviewOptions, Message
 
 from telegram_bot import start_bot, telegram_group_id, bot
 
-from database import create_db_connection, get_unread_news, close, mark_news_as_sent
+from database import DatabaseConnection, NewsRepository
 import logging
 
 router = Router()
@@ -17,6 +17,7 @@ async def tg_bot():
 
 # Функция для отправки новостей в Телеграм
 async def send_news_to_telegram(new_news, connection):
+    mark_news = NewsRepository(connection)
     list_id = []
     for id_news, title, date_time, desc, url, url_img, category in sorted(new_news):
         options = LinkPreviewOptions(
@@ -27,23 +28,24 @@ async def send_news_to_telegram(new_news, connection):
         await bot.send_message(telegram_group_id, text=message, link_preview_options=options)
         list_id.append(id_news)
 
-    mark_news_as_sent(connection, list_id)
+    mark_news.mark_news_as_sent(list_id)
 
 
 # Функция отправки новостей
 async def send_news():
     try:
-        connection = create_db_connection()
+        connection = DatabaseConnection()
 
+        unread = NewsRepository(connection)
         if connection:
             # Достаем новые новости, которые еще не были отправлены в Telegram
-            unread_news = get_unread_news(connection)
+            unread_news = unread.get_unread_news()
 
             if unread_news:
                 await send_news_to_telegram(unread_news, connection)
 
             # Закрываем соединение с базой
-            close(connection)
+            connection.close_db()
     except Exception as error:
         logging.error(f'Ошибка в процессе парсинга и отправки новостей: {error}')
 

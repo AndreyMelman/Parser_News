@@ -1,9 +1,12 @@
 import logging
 import asyncio
+
 from parser.ddd_news import load_articles_from_3dnews
 from parser.habr_news import load_articles_from_habr
 from parser.onliner_news import load_articles_from_onliner
-from database import create_db_connection, save_data_in_db, close
+from parser.gismeteo_news import load_articles_from_gismeteo
+
+from database import DatabaseConnection, NewsRepository
 
 
 # Функция запуска парсинга сайта и записи новых новостей в базу каждые 60 мин
@@ -20,17 +23,20 @@ async def parse_news():
         news_3dnews = load_articles_from_3dnews()
         news_habr = load_articles_from_habr()
         news_onliner = load_articles_from_onliner()
+        news_gismeteo = load_articles_from_gismeteo()
         # Подключаемся к базе данных
-        connection = create_db_connection()
+        connection = DatabaseConnection()
+        # Сохраняем в базу новые новости
+        save = NewsRepository(connection)
 
-        if connection:
-            # Сохраняем в базу новые новости
-            save_data_in_db(connection, news_3dnews)
-            save_data_in_db(connection, news_habr)
-            save_data_in_db(connection, news_onliner)
+        save.save_data_in_db(news_3dnews)
+        save.save_data_in_db(news_habr)
+        save.save_data_in_db(news_onliner)
+        save.save_data_in_db(news_gismeteo)
+
         # Закрываем соединение с базой
 
-        close(connection)
+        connection.close_db()
 
     except Exception as error:
         logging.error(f'Ошибка в процессе парсинга и отправки новостей: {error}')

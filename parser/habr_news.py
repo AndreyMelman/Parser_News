@@ -1,8 +1,7 @@
-import json
-
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from datetime import timedelta
 
 
 # Функция парсинга новостного сайта
@@ -41,7 +40,8 @@ def load_articles_from_habr():
         article_category = 'Habr news'
         date_obj = article.find('time').get('datetime')
         article_date = datetime.strptime(date_obj, '%Y-%m-%dT%H:%M:%S.%fZ')
-        article_date_time = article_date.strftime('%Y-%m-%d %H:%M:%S')
+        article_date_time1 = article_date + timedelta(hours=3)
+        article_date_time = article_date_time1.strftime('%Y-%m-%d %H:%M:%S')
         news_dict[article_id] = {
             'article_title': article_title,
             'article_date_time': article_date_time,
