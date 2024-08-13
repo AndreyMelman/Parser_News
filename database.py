@@ -9,18 +9,24 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 # Класс для управления подключением к базе данных
 class DatabaseConnection:
 
-    def __init__(self):
+    def __init__(self, user=config.db_user.get_secret_value(),
+                 host=config.db_host.get_secret_value(),
+                 password=config.db_password.get_secret_value(),
+                 database=config.db_name.get_secret_value()):
+        self.__user = user
+        self.__host = host
+        self.__password = password
+        self.__database = database
         self.connection = None
-        self.create_db_connection()
 
     # Функция создания подключения к базе данных
     def create_db_connection(self):
         try:
             self.connection = psycopg2.connect(
-                user=config.db_user.get_secret_value(),
-                host=config.db_host.get_secret_value(),
-                password=config.db_password.get_secret_value(),
-                database=config.db_name.get_secret_value()
+                user=self.__user,
+                host=self.__host,
+                password=self.__password,
+                database=self.__database
             )
             logging.info(f'Успешное подключение к базе данных')
             return self.connection

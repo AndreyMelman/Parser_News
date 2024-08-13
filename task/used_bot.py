@@ -35,7 +35,7 @@ async def send_news_to_telegram(new_news, connection):
 async def send_news():
     try:
         connection = DatabaseConnection()
-
+        connection.create_db_connection()
         unread = NewsRepository(connection)
         if connection:
             # Достаем новые новости, которые еще не были отправлены в Telegram
