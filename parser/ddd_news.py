@@ -1,9 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from parser.news_parser import NewsParse
 
 
-class DddnewsNewsParser:
+class DddnewsNewsParser(NewsParse):
 
     def __init__(self):
         self.url = 'https://3dnews.ru/software-news/rss'
@@ -11,6 +12,9 @@ class DddnewsNewsParser:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
                           ' Chrome/127.0.0.0 Safari/537.36'
         }
+
+    async def load_articles(self):
+        return await self.load_articles_from_3dnews()
 
     # Функция парсинга новостного сайта
     async def load_articles_from_3dnews(self):

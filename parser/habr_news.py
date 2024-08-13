@@ -2,9 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 from datetime import timedelta
+from parser.news_parser import NewsParse
 
 
-class HabrNewsParser:
+class HabrNewsParser(NewsParse):
 
     def __init__(self, url='https://habr.com/ru/news/'):
         self.url = url
@@ -12,6 +13,9 @@ class HabrNewsParser:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
                           ' Chrome/127.0.0.0 Safari/537.36'
         }
+
+    async def load_articles(self):
+        return await self.load_articles_from_habr()
 
     # Функция парсинга новостного сайта
     async def load_articles_from_habr(self):
