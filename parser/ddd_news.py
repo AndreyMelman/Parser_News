@@ -13,7 +13,7 @@ class DddnewsNewsParser:
         }
 
     # Функция парсинга новостного сайта
-    def load_articles_from_3dnews(self):
+    async def load_articles_from_3dnews(self):
         # Получаем URL нашего сайта
         response = requests.get(self.url, headers=self.headers)
         # Получаем HTML-файл

@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
+
 class GismeteoParse:
 
     def __init__(self):
@@ -10,8 +11,9 @@ class GismeteoParse:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
                           ' Chrome/127.0.0.0 Safari/537.36'
         }
+
     # Функция парсинга новостного сайта
-    def load_articles_from_gismeteo(self):
+    async def load_articles_from_gismeteo(self):
         # Получаем URL нашего сайта
         response = requests.get(self.url, headers=self.headers)
         # Получаем HTML-файл
@@ -34,7 +36,7 @@ class GismeteoParse:
             article_category = 'Gismeteo news'
             date_obj = article.find('a').get('data-pub-date')
             article_date = datetime.strptime(date_obj, '%Y-%m-%dT%H:%M:%S')
-            article_date_time1 = article_date + timedelta(hours=3)
+            article_date_time1 = article_date + timedelta(hours=0)
             article_date_time = article_date_time1.strftime('%Y-%m-%d %H:%M:%S')
             article_id = str(int(article_date.timestamp()))
 
