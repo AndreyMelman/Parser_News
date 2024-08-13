@@ -28,7 +28,7 @@ async def send_news_to_telegram(new_news, connection):
         await bot.send_message(telegram_group_id, text=message, link_preview_options=options)
         list_id.append(id_news)
 
-    mark_news.mark_news_as_sent(list_id)
+    await mark_news.mark_news_as_sent(list_id)
 
 
 # Функция отправки новостей
@@ -39,7 +39,7 @@ async def send_news():
         unread = NewsRepository(connection)
         if connection:
             # Достаем новые новости, которые еще не были отправлены в Telegram
-            unread_news = unread.get_unread_news()
+            unread_news = await unread.get_unread_news()
 
             if unread_news:
                 await send_news_to_telegram(unread_news, connection)

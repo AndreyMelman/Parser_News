@@ -47,7 +47,7 @@ class NewsRepository:
         self.db_connection = db_connection
 
     # Функция сохранения данных в базу PostgreSQL
-    def save_data_in_db(self, news_dict):
+    async def save_data_in_db(self, news_dict):
         connection = self.db_connection.connection
         if not connection:
             logging.error(f'Нет активного подключения к базе данных')
@@ -74,7 +74,7 @@ class NewsRepository:
             logging.error(f'Ошибка при сохранении данных в PostgreSQL: {error}')
 
     # Функция получения новых новостей из базы PostgreSQL
-    def get_unread_news(self):
+    async def get_unread_news(self):
         connection = self.db_connection.connection
         if not connection:
             logging.error(f'Нет активного подключения к базе данных')
@@ -93,7 +93,7 @@ class NewsRepository:
             return []
 
     # Функция обновления столбца sent_to_telegram, для отправления в телеграм новых новостей
-    def mark_news_as_sent(self, list_id):
+    async def mark_news_as_sent(self, list_id):
         connection = self.db_connection.connection
         if not connection:
             logging.error(f'Нет активного подключения к базе данных')
