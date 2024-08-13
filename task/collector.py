@@ -9,7 +9,6 @@ from parser.gismeteo_news import GismeteoParse
 from database import DatabaseConnection, NewsRepository
 
 
-
 # Функция запуска парсинга сайта и записи новых новостей в базу каждые 60 мин
 async def collector():
     while True:
@@ -21,16 +20,14 @@ async def collector():
 async def parse_news():
     try:
         # Парсим сайт
-        parse_3dnews = DddnewsNewsParser()
-        parse_habr = HabrNewsParser()
-        parse_onliner = OnlinerParse()
-        parse_gismeteo = GismeteoParse()
+        parsers = [
+            DddnewsNewsParser(),
+            HabrNewsParser(),
+            OnlinerParse(),
+            GismeteoParse()
+        ]
 
-        result = await asyncio.gather(
-            parse_3dnews.load_articles_from_3dnews(),
-            parse_habr.load_articles_from_habr(),
-            parse_onliner.load_articles_from_onliner(),
-            parse_gismeteo.load_articles_from_gismeteo())
+        result = await asyncio.gather(*(article.load_articles() for article in parsers))
 
         # Подключаемся к базе данных
         connection = DatabaseConnection()
@@ -39,12 +36,7 @@ async def parse_news():
         # Сохраняем в базу новые новости
         news_repository = NewsRepository(connection)
 
-        await asyncio.gather(
-            news_repository.save_data_in_db(result[0]),
-            news_repository.save_data_in_db(result[1]),
-            news_repository.save_data_in_db(result[2]),
-            news_repository.save_data_in_db(result[3])
-        )
+        await asyncio.gather(*(news_repository.save_data_in_db(article) for article in result))
 
         # Закрываем соединение с базой
         connection.close_db()
